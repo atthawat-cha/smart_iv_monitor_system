@@ -3,7 +3,7 @@
 [[Pre - Pitch]]
 
 #### Slide
-[[SMIS_Smart_IV_Monitoring.pdf]]
+[[04 Documents/Project - SMIS/SMIS_Smart_IV_Monitoring.pdf]]
 
 #### Context
 [[PRD For Pitch (Conclusion)]]
