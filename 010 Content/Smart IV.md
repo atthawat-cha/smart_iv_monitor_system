@@ -15,7 +15,7 @@ From Event : [[ADT-RAISE Batch 2 Overview]]
 - [[MVP Scope Checklist]]
 
 ###### Project Pitch Preparation
-- [[Pitch Preparation]]
+- [[01 Pitch Preparation]]
 
 ##### Project Plans
 - [[ADT-RAISE Batch 2 Overview]]

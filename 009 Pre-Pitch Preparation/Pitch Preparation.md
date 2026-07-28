@@ -1,10 +1,15 @@
+### Context
+---
 
-#### Detail
-[[Pre - Pitch]]
 
-#### Slide
-[[04 Documents/Project - SMIS/SMIS_Smart_IV_Monitoring.pdf]]
 
-#### Context
-[[PRD For Pitch (Conclusion)]]
 
+#### By Pitching
+- Problem
+- Solution
+- Key Features
+- Expected Impact
+- Business model
+	- ต้นทุน
+	- กำไรที่ได้เกิดจากอะไร
+	- โมเดลธุระกิจ 
