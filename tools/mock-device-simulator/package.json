@@ -1,0 +1,20 @@
+{
+  "name": "@smis/mock-device-simulator",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Simulates a fleet of ESP32 IV nodes sending telemetry, for testing the pipeline/alert engine without hardware",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev src/index.ts"
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "ts-node": "^10.9.0",
+    "ts-node-dev": "^2.0.0",
+    "@types/node": "^20.14.0"
+  }
+}

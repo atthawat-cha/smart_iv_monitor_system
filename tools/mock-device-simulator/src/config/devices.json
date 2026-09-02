@@ -1,0 +1,42 @@
+[
+  {
+    "deviceId": "IV-5A-01",
+    "wardId": "ward-5a",
+    "bedId": "bed-5a-01",
+    "startWeightGrams": 500,
+    "scenario": "normal",
+    "firmwareVersion": "1.0.0"
+  },
+  {
+    "deviceId": "IV-5A-02",
+    "wardId": "ward-5a",
+    "bedId": "bed-5a-02",
+    "startWeightGrams": 120,
+    "scenario": "critical-low",
+    "firmwareVersion": "1.0.0"
+  },
+  {
+    "deviceId": "IV-5A-03",
+    "wardId": "ward-5a",
+    "bedId": "bed-5a-03",
+    "startWeightGrams": 30,
+    "scenario": "empty",
+    "firmwareVersion": "1.0.0"
+  },
+  {
+    "deviceId": "IV-5B-01",
+    "wardId": "ward-5b",
+    "bedId": "bed-5b-01",
+    "startWeightGrams": 400,
+    "scenario": "offline",
+    "firmwareVersion": "1.0.0"
+  },
+  {
+    "deviceId": "IV-5B-02",
+    "wardId": "ward-5b",
+    "bedId": "bed-5b-02",
+    "startWeightGrams": 350,
+    "scenario": "occlusion-suspected",
+    "firmwareVersion": "1.0.0"
+  }
+]

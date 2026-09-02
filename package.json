@@ -1,0 +1,14 @@
+{
+  "name": "smis",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Smart IV Monitoring System (SMIS) monorepo — web dashboard, API, and device tooling",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev:web": "pnpm --filter ./apps/web dev",
+    "dev:api": "pnpm --filter ./apps/api start:dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  }
+}

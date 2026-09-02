@@ -1,0 +1,3 @@
+packages:
+  - "apps/*"
+  - "tools/mock-device-simulator"

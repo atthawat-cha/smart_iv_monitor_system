@@ -34,3 +34,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# nestjs / node
+/apps/api/dist
+/tools/mock-device-simulator/dist
+
+# monorepo
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# platformio (firmware)
+firmware/esp32-iv-node/.pio/
+firmware/esp32-iv-node/.vscode/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# logs
+*.log

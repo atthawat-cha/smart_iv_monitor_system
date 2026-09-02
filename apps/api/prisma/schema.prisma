@@ -1,0 +1,133 @@
+// SMIS Prisma schema — MVP entities per "014 Database/Database.md" (snake_case naming).
+// Stub only: relations/fields are sketched to match the doc; verify against the doc before migrating.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  nurse
+  head_nurse
+  hospital_admin
+  system_admin
+}
+
+enum BedStatus {
+  vacant
+  occupied
+  offline
+}
+
+enum DeviceStatus {
+  online
+  offline
+  low_battery
+}
+
+enum AlertType {
+  critical_low
+  empty
+  device_offline
+  occlusion_suspected
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Ward {
+  id    String @id @default(uuid())
+  name  String
+  floor String
+  beds  Bed[]
+
+  @@map("wards")
+}
+
+model Bed {
+  id         String     @id @default(uuid())
+  wardId     String     @map("ward_id")
+  deviceId   String?    @unique @map("device_id")
+  patientHn  String?    @map("patient_hn")
+  status     BedStatus  @default(vacant)
+
+  ward       Ward        @relation(fields: [wardId], references: [id])
+  device     Device?     @relation(fields: [deviceId], references: [id])
+  ivStatus   IvStatus?
+  ivReadings IvReading[]
+  alerts     Alert[]
+
+  @@map("beds")
+}
+
+model Device {
+  id              String       @id @default(uuid())
+  deviceCode      String       @unique @map("device_code")
+  firmwareVersion String?      @map("firmware_version")
+  battery         Int?
+  rssi            Int?
+  lastSeen        DateTime?    @map("last_seen")
+  status          DeviceStatus @default(offline)
+
+  bed        Bed?
+  ivReadings IvReading[]
+
+  @@map("devices")
+}
+
+// One row per bed — current-state snapshot (013 Architecture: "Keep the Server Smart").
+model IvStatus {
+  bedId             String    @id @map("bed_id")
+  remainingMl       Float     @map("remaining_ml")
+  remainingPercent  Float     @map("remaining_percent")
+  flowRate          Float     @map("flow_rate")
+  estimatedEmptyAt  DateTime? @map("estimated_empty_at")
+  priorityScore     Float     @map("priority_score")
+  isMobilityMode    Boolean   @default(false) @map("is_mobility_mode")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  bed Bed @relation(fields: [bedId], references: [id])
+
+  @@map("iv_status")
+}
+
+// Append-only telemetry time series — bigserial PK for high insert rate.
+model IvReading {
+  id         BigInt   @id @default(autoincrement())
+  bedId      String   @map("bed_id")
+  deviceId   String   @map("device_id")
+  weight     Float
+  battery    Int?
+  rssi       Int?
+  recordedAt DateTime @default(now()) @map("recorded_at")
+
+  bed    Bed    @relation(fields: [bedId], references: [id])
+  device Device @relation(fields: [deviceId], references: [id])
+
+  @@index([bedId, recordedAt])
+  @@map("iv_readings")
+}
+
+model Alert {
+  id         String    @id @default(uuid())
+  bedId      String    @map("bed_id")
+  type       AlertType
+  isRead     Boolean   @default(false) @map("is_read")
+  resolvedAt DateTime? @map("resolved_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  bed Bed @relation(fields: [bedId], references: [id])
+
+  @@map("alerts")
+}
