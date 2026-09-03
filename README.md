@@ -4,6 +4,14 @@
 
 โฟลเดอร์นี้เป็น Obsidian vault ที่รวบรวมเอกสารทั้งหมดของโปรเจกต์ SMIS ตั้งแต่ pitch, requirement, architecture, database, API, UX/UI ไปจนถึงแผนพัฒนาและ test spec
 
+## หมายเหตุถึงอาจารย์ (RAISE2 Module 2)
+
+Repo นี้เป็น repo เดียวกันที่ใช้ทั้งเก็บเอกสารโปรเจกต์ SMIS จริง และส่งงานการบ้านวิชา RAISE2 Module 2 โดยแยกส่วนกันชัดเจน:
+
+- **ระบบ SMIS จริง** ออกแบบให้ใช้ **PostgreSQL + Prisma** ตั้งแต่ Sprint 1 ของแผนพัฒนา (ดู [Database Schema](<014 Database/Database.md>) และ `000-Project-Code/smis/apps/api/prisma/schema.prisma`)
+- **งานการบ้านที่กำหนดให้ใช้ Firestore** จึงถูกทำแยกไว้ต่างหากในโฟลเดอร์ [`raise2-homework/`](raise2-homework/) เป็น sandbox เฉพาะกิจ เพื่อฝึกตามที่คอร์สสอน โดยไม่ปะปนกับ schema/โค้ดจริงของโปรเจกต์
+- ดูรายละเอียด scope ของงานการบ้านแต่ละสัปดาห์ได้ที่ [`SCOPE.md`](SCOPE.md)
+
 ## โครงสร้างไฟล์
 
 | โฟลเดอร์ | เนื้อหา |
@@ -24,7 +32,7 @@
 | `020 Testing/` | Testing Plan, Test Spec (Priority Queue & Critical Alert) |
 | `021 MVP Scope/` | MVP Scope Checklist |
 | `022 Detailed Design/` | Detailed Design |
-| `raise2-homework/` | งานการบ้านคอร์ส RAISE2 Module 2 (แยกจากระบบจริง ดูหมายเหตุใน [SCOPE.md](SCOPE.md)) |
+| `raise2-homework/` | งานการบ้านคอร์ส RAISE2 Module 2 — Firestore sandbox แยกจากระบบจริง (ดูหมายเหตุถึงอาจารย์ด้านบน) |
 | `Notebook LM.md` | สรุปโปรเจกต์สำหรับการนำเสนอ 4 นาที |
 | `LICENSE` | MIT License |
 
