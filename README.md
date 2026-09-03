@@ -24,6 +24,7 @@
 | `020 Testing/` | Testing Plan, Test Spec (Priority Queue & Critical Alert) |
 | `021 MVP Scope/` | MVP Scope Checklist |
 | `022 Detailed Design/` | Detailed Design |
+| `raise2-homework/` | งานการบ้านคอร์ส RAISE2 Module 2 (แยกจากระบบจริง ดูหมายเหตุใน [SCOPE.md](SCOPE.md)) |
 | `Notebook LM.md` | สรุปโปรเจกต์สำหรับการนำเสนอ 4 นาที |
 | `LICENSE` | MIT License |
 

@@ -31,6 +31,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# raise2-homework: real Firebase config, kept local only
+raise2-homework/**/firebase-config.js
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
