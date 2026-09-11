@@ -1,0 +1,44 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc(uid) {
+      return get(/databases/$(database)/documents/users/$(uid));
+    }
+
+    function isAdmin() {
+      return isSignedIn() && userDoc(request.auth.uid).data.role == 'admin';
+    }
+
+    // users/{uid} — โปรไฟล์ส่วนตัว (role ของผู้ใช้) เห็นได้เฉพาะเจ้าของ uid เท่านั้น
+    // สร้างเองได้ตอน signup (role เริ่มต้น = staff) แต่แก้ role เองไม่ได้ —
+    // อาจารย์/แอดมินไปเปลี่ยนใน Firebase Console เพื่อทดสอบ role switching
+    match /users/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow create: if isSignedIn() && request.auth.uid == uid
+        && request.resource.data.role == 'staff';
+      allow update, delete: if false;
+    }
+
+    // wards/{wardId} — ข้อมูล ward กลาง ทุกคนที่ล็อกอินแล้วดูได้ (ไม่ใช่ private ต่อ user)
+    match /wards/{wardId} {
+      allow read: if isSignedIn();
+
+      allow create: if isAdmin()
+        && request.resource.data.createdBy == request.auth.uid;
+
+      // Update: แก้ได้เฉพาะฟิลด์ status เท่านั้น และแอดมินคนที่สร้าง ward เอง
+      // จะ "อนุมัติ/เปลี่ยนสถานะ" ward ของตัวเองไม่ได้ (ต้องให้แอดมินอีกคนเปลี่ยน)
+      allow update: if isAdmin()
+        && resource.data.createdBy != request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+
+      allow delete: if isAdmin();
+    }
+  }
+}

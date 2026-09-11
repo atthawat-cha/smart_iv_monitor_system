@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SMIS — Ward Monitor (Week 7)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <p class="brand-name">SMIS</p>
+        <p class="brand-sub">Ward monitor for Week 7 homework (BL-201)</p>
+      </div>
+    </div>
+    <div id="session" class="session" hidden>
+      <span id="whoami"></span>
+      <span id="role-badge" class="role-badge"></span>
+      <button id="logout-btn" class="btn btn-ghost">Log out</button>
+    </div>
+  </header>
+
+  <main>
+    <p id="status" class="status-line" role="status"></p>
+
+    <section id="auth-section" class="auth-layout">
+      <div class="auth-card">
+        <h1>Sign in to the ward board</h1>
+        <p class="lede">ล็อกอินก่อนใช้งาน ผู้ใช้ใหม่จะเริ่มต้นเป็น role staff (ดูข้อมูลได้อย่างเดียว)</p>
+
+        <form id="login-form" class="stacked-form">
+          <label>Email <input id="login-email" type="email" required autocomplete="email" /></label>
+          <label>Password <input id="login-password" type="password" required autocomplete="current-password" /></label>
+          <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+
+        <details class="signup-details">
+          <summary>ยังไม่มีบัญชี — สมัครใหม่</summary>
+          <form id="signup-form" class="stacked-form">
+            <label>Email <input id="signup-email" type="email" required autocomplete="email" /></label>
+            <label>Password <input id="signup-password" type="password" minlength="6" required autocomplete="new-password" /></label>
+            <button type="submit" class="btn btn-secondary">Sign up</button>
+          </form>
+        </details>
+      </div>
+    </section>
+
+    <section id="app-section" hidden>
+      <section class="panel admin-only" hidden>
+        <h2>Add a ward</h2>
+        <form id="create-form" class="ward-form">
+          <label>Name <input id="ward-name" required /></label>
+          <label>Type <input id="ward-type" placeholder="ICU, Medical Ward, ..." required /></label>
+          <label>Floor <input id="ward-floor" required /></label>
+          <label>Total beds <input id="ward-beds" type="number" min="1" required /></label>
+          <label class="span-2">Note <input id="ward-note" placeholder="Optional" /></label>
+          <div class="form-actions span-2">
+            <button type="submit" class="btn btn-primary">Add ward</button>
+            <button type="button" id="seed-btn" class="btn btn-ghost">Seed sample wards</button>
+          </div>
+        </form>
+      </section>
+
+      <div class="board-header">
+        <h2>Wards</h2>
+        <button id="refresh-btn" class="btn btn-ghost">Refresh</button>
+      </div>
+      <ul id="ward-list" class="ward-grid"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

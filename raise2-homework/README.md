@@ -11,3 +11,4 @@
 | โฟลเดอร์ | เนื้อหา |
 |---|---|
 | `week6/` | การบ้านสัปดาห์ 6 — Firestore CRUD เบื้องต้น (อ้างอิงหัวข้อ BL-201: Ward CRUD) |
+| `week7/` | การบ้านสัปดาห์ 7 — เพิ่ม Firebase Auth, role-based ACL (`admin`/`staff`) และ deploy ขึ้น Firebase Hosting ต่อยอดจาก week6 |
