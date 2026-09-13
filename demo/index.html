@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SMIS Demo</title>
+</head>
+<body>
+  <script src="js/data/seed.js"></script>
+  <script src="js/core/formulas.js"></script>
+  <script src="js/core/store.js"></script>
+  <script>
+    const state = SMIS.Store.load();
+    window.location.replace(state.session && state.session.role ? 'dashboard.html' : 'login.html');
+  </script>
+</body>
+</html>

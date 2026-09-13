@@ -1,0 +1,55 @@
+/* Presentation / TV board — meant for a wall-mounted monitor or ward nurse-station screen.
+   Reuses tokens/components/charts styling; #tv-root is zoomed up so the same components read
+   comfortably from a distance. `zoom` (not `transform:scale`) keeps layout/overflow simple and
+   is fine for a kiosk display, which in practice runs a Chromium-based browser. */
+html, body { height: 100%; }
+body.tv-body { overflow: hidden; }
+
+#tv-root {
+  zoom: 1.35;
+  min-height: 100vh;
+  padding: 22px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-sizing: border-box;
+}
+
+.tv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+}
+.tv-title-row { display: flex; align-items: center; gap: 14px; }
+.tv-logo-mark {
+  width: 40px; height: 40px; border-radius: 11px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-gradient);
+}
+.tv-title { font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--text-heading); }
+.tv-subtitle { font-size: 13.5px; color: var(--text-tertiary); margin-top: 2px; }
+.tv-live-dot { position: relative; width: 9px; height: 9px; border-radius: 50%; background: var(--green-soft); flex: none; }
+.tv-live-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--green-soft); animation: ping 1.8s cubic-bezier(0,0,0.2,1) infinite; }
+.tv-clock-box { text-align: right; }
+.tv-clock { font-family: var(--font-display); font-weight: 700; font-size: 28px; color: var(--text-heading); letter-spacing: 0.5px; }
+.tv-date { font-size: 12.5px; color: var(--text-tertiary); }
+.tv-exit {
+  margin-left: 16px; font-size: 11.5px; color: var(--text-tertiary);
+  border: 1px solid var(--panel-border); border-radius: 8px; padding: 5px 10px; background: rgba(255,255,255,0.04);
+}
+.tv-exit:hover { color: var(--text-primary); }
+
+.tv-body-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 320px; gap: 18px; }
+.tv-main-col { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.tv-side-col { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+
+.tv-ticker-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--panel-border-soft); }
+.tv-ticker-item:last-child { border-bottom: none; }
+.tv-ticker-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex: none; }
+.tv-ticker-title { font-size: 12.5px; font-weight: 700; color: var(--text-primary); }
+.tv-ticker-sub { font-size: 11.5px; color: var(--text-tertiary); margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .tv-body-grid { grid-template-columns: 1fr; }
+}

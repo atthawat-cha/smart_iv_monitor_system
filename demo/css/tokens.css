@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #07080d;
+  --bg-radial: radial-gradient(1200px 700px at 78% -10%, rgba(124,108,255,0.14), transparent 60%);
+  --panel: rgba(255,255,255,0.035);
+  --panel-soft: rgba(255,255,255,0.025);
+  --panel-border: rgba(255,255,255,0.08);
+  --panel-border-soft: rgba(255,255,255,0.06);
+
+  --text-primary: #f4f6fb;
+  --text-heading: #f6f8fc;
+  --text-secondary: #8891a3;
+  --text-tertiary: #7c879c;
+  --text-quaternary: #8792a6;
+
+  --accent: #7c6cff;
+  --accent-hover: #9d8cff;
+  --accent-strong: #b9adff;
+  --accent-cyan: #4de3ff;
+  --accent-gradient: linear-gradient(135deg, var(--accent), #423a9e);
+  --accent-gradient-2: linear-gradient(135deg, var(--accent-cyan), var(--accent));
+
+  --green: #34d399;
+  --green-soft: #86eec1;
+  --green-tint: #dafbe9;
+  --green-bg: rgba(52,211,153,0.06);
+  --green-border: rgba(52,211,153,0.26);
+
+  --yellow: #ffd166;
+  --yellow-soft: #ffdd8a;
+  --yellow-bg: rgba(255,209,102,0.10);
+  --yellow-border: rgba(255,209,102,0.3);
+
+  --orange: #ff9d42;
+  --orange-soft: #ffb578;
+  --orange-tint: #ffe9cf;
+  --orange-bg: rgba(255,157,66,0.06);
+  --orange-border: rgba(255,157,66,0.28);
+
+  --red: #f5455c;
+  --red-soft: #ff8a97;
+  --red-tint: #ffe2e5;
+  --red-bg: rgba(245,69,92,0.07);
+  --red-border: rgba(245,69,92,0.3);
+
+  --gray: #6b7280;
+  --gray-soft: #cbd5e1;
+  --gray-bg: rgba(148,163,184,0.10);
+  --gray-border: rgba(148,163,184,0.28);
+
+  --radius-card: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-radial), var(--bg);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+a { color: var(--accent-hover); text-decoration: none; }
+a:hover { color: var(--accent-strong); }
+button { font-family: inherit; cursor: pointer; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,69,92,0.45), 0 10px 30px -8px rgba(245,69,92,0.35); }
+  50% { box-shadow: 0 0 0 7px rgba(245,69,92,0.10), 0 10px 40px -4px rgba(245,69,92,0.55); }
+}
+@keyframes ping {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  75%, 100% { transform: scale(1.9); opacity: 0; }
+}
+@keyframes bannerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+@keyframes toastIn {
+  0% { transform: translateX(24px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SMIS · Presentation</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/charts.css">
+  <link rel="stylesheet" href="css/tv.css">
+</head>
+<body class="tv-body">
+  <div id="tv-root">
+    <div class="tv-header">
+      <div class="tv-title-row">
+        <div class="tv-logo-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 22v-6M4.9 4.9l4.2 4.2M19.1 4.9l-4.2 4.2M2 12h6M22 12h-6M4.9 19.1l4.2-4.2M19.1 19.1l-4.2-4.2"/></svg>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="tv-live-dot"></span>
+            <span class="tv-title" id="tv-title">Loading…</span>
+          </div>
+          <div class="tv-subtitle" id="tv-subtitle"></div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center;">
+        <div class="tv-clock-box">
+          <div class="tv-clock" id="tv-clock">--:--:--</div>
+          <div class="tv-date" id="tv-date"></div>
+        </div>
+        <button class="tv-exit" id="tv-fullscreen" style="margin-left:14px;">Fullscreen</button>
+        <a class="tv-exit" href="dashboard.html">Exit</a>
+      </div>
+    </div>
+
+    <div class="kpi-grid" id="tv-kpis" style="grid-template-columns:repeat(6, minmax(0,1fr));"></div>
+
+    <div class="tv-body-grid">
+      <div class="tv-main-col">
+        <div class="bed-grid" id="tv-bed-grid" style="grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));"></div>
+      </div>
+      <div class="tv-side-col">
+        <div class="card-panel" style="padding:16px; flex:1; min-height:0; overflow-y:auto;">
+          <div class="section-title" style="margin-bottom:8px;">Recent Alerts</div>
+          <div id="tv-ticker"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data/seed.js"></script>
+  <script src="js/data/scenarios.js"></script>
+  <script src="js/core/formulas.js"></script>
+  <script src="js/core/alerts.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/core/engine.js"></script>
+  <script src="js/ui/format.js"></script>
+  <script src="js/ui/toast.js"></script>
+  <script src="js/ui/charts.js"></script>
+  <script src="js/ui/bedcard.js"></script>
+  <script src="js/ui/drawer.js"></script>
+  <script src="js/pages/tv.page.js"></script>
+</body>
+</html>
