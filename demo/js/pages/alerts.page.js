@@ -8,8 +8,8 @@
     critical_low: '#ff8a97', empty: '#ff8a97', device_offline: '#cbd5e1', occlusion_suspected: '#ffdd8a',
   };
 
-  function filterAlerts(state) {
-    const sorted = state.alerts.slice().sort((a, b) => b.createdAt - a.createdAt);
+  function filterAlerts(alertList) {
+    const sorted = alertList.slice().sort((a, b) => b.createdAt - a.createdAt);
     if (tab === 'unread') return sorted.filter((a) => !a.isRead && !a.resolvedAt);
     if (tab === 'open') return sorted.filter((a) => !a.resolvedAt);
     if (tab === 'resolved') return sorted.filter((a) => a.resolvedAt);
@@ -18,10 +18,12 @@
 
   function render() {
     const state = SMIS.Store.get();
-    const openCount = state.alerts.filter((a) => !a.resolvedAt).length;
+    const canAct = SMIS.Permissions.canAct(state);
+    const alerts = SMIS.Permissions.scopedAlerts(state);
+    const openCount = alerts.filter((a) => !a.resolvedAt).length;
     SMIS.Shell.render({ page: 'alerts', breadcrumb: 'ALERTS', title: 'Alert Center', meta: `${openCount} open alert${openCount === 1 ? '' : 's'}` });
 
-    const list = filterAlerts(state);
+    const list = filterAlerts(alerts);
     const rows = list.map((a) => {
       const bed = state.beds.find((b) => b.id === a.bedId);
       const ivs = state.ivStatus[a.bedId] || {};
@@ -35,8 +37,8 @@
           <td>${SMIS.Format.timeAgo(a.createdAt)}</td>
           <td>${a.resolvedAt ? 'Resolved' : (a.isRead ? 'Read' : 'Unread')}</td>
           <td class="table-actions">
-            ${!a.isRead ? `<button class="btn-chip" data-mark-read="${a.id}">Mark read</button>` : ''}
-            ${!a.resolvedAt ? `<button class="btn-chip primary" data-resolve="${a.id}">Resolve</button>` : ''}
+            ${canAct && !a.isRead ? `<button class="btn-chip" data-mark-read="${a.id}">Mark read</button>` : ''}
+            ${canAct && !a.resolvedAt ? `<button class="btn-chip primary" data-resolve="${a.id}">Resolve</button>` : ''}
             <button class="btn-chip" data-view="${a.bedId}">View bed</button>
           </td>
         </tr>`;

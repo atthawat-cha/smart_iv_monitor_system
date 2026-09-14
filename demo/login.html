@@ -27,6 +27,7 @@
   <script src="js/core/alerts.js"></script>
   <script src="js/core/store.js"></script>
   <script src="js/core/engine.js"></script>
+  <script src="js/core/permissions.js"></script>
   <script>
     const state = SMIS.Store.load();
     let selectedUserId = null;
@@ -51,7 +52,8 @@
     document.getElementById('sign-in-btn').addEventListener('click', () => {
       if (!selectedUserId) return;
       SMIS.Actions.login(selectedUserId);
-      window.location.href = 'dashboard.html';
+      const user = state.users.find((u) => u.id === selectedUserId);
+      window.location.href = user && user.role === 'guest' ? 'tv.html' : 'dashboard.html';
     });
   </script>
 </body>

@@ -54,6 +54,7 @@
   const ALERT_ICON_COLOR = { critical_low: '#ff8a97', empty: '#ff8a97', device_offline: '#cbd5e1', occlusion_suspected: '#ffdd8a' };
 
   function renderTicker(state, wardId) {
+    const isGuest = SMIS.Permissions.isGuest(state);
     const alerts = state.alerts
       .filter((a) => !wardId || state.beds.find((b) => b.id === a.bedId && b.wardId === wardId))
       .slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 10);
@@ -63,7 +64,7 @@
         <div class="tv-ticker-dot" style="background:${ALERT_ICON_COLOR[a.type] || '#c3cadb'};"></div>
         <div style="flex:1; min-width:0;">
           <div class="tv-ticker-title">Bed ${a.bedId} — ${a.type.replace('_', ' ')}${a.resolvedAt ? ' (resolved)' : ''}</div>
-          <div class="tv-ticker-sub">${a.message}</div>
+          <div class="tv-ticker-sub">${isGuest ? a.message.replace(/\s*\(HN-[^)]*\)/g, '') : a.message}</div>
         </div>
         <div style="font-size:11px; color:var(--text-quaternary); white-space:nowrap;">${SMIS.Format.timeAgo(a.createdAt)}</div>
       </div>`).join('');
@@ -92,9 +93,11 @@
       <div class="kpi-card ${kpis.openAlerts > 0 ? 'tint-critical' : ''}"><div class="kpi-card-head"><div class="kpi-label">OPEN ALERTS</div></div><div class="kpi-value">${kpis.openAlerts}</div></div>
     `;
 
+    const isGuest = SMIS.Permissions.isGuest(state);
     const beds = ward ? state.beds.filter((b) => b.wardId === ward.id) : state.beds;
-    const vms = sortedVms(beds.map((b) => SMIS.BedCard.viewModel(state, b.id)));
-    SMIS.BedCard.renderGrid(document.getElementById('tv-bed-grid'), vms, (bedId) => SMIS.Drawer.open(bedId));
+    const vms = sortedVms(beds.map((b) => SMIS.BedCard.viewModel(state, b.id, { maskPatient: isGuest })));
+    // Public/guest boards are look-only: no drilling into a patient's detail drawer.
+    SMIS.BedCard.renderGrid(document.getElementById('tv-bed-grid'), vms, isGuest ? null : (bedId) => SMIS.Drawer.open(bedId));
 
     document.getElementById('tv-ticker').innerHTML = renderTicker(state, wardId);
   }

@@ -68,7 +68,7 @@ SMIS.Drawer = (function () {
         <div>
           <div class="drawer-eyebrow">PATIENT DETAIL</div>
           <div class="drawer-title">Bed ${vm.bed.id}</div>
-          <div class="drawer-sub">${vm.bed.patientHn} · ${vm.ward ? vm.ward.name : ''}</div>
+          <div class="drawer-sub">${vm.displayHn} · ${vm.ward ? vm.ward.name : ''}</div>
         </div>
         <button class="drawer-close" aria-label="Close">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -105,6 +105,7 @@ SMIS.Drawer = (function () {
         <div class="chart-box">${chart}</div>
       </div>
 
+      ${SMIS.Permissions.canAct(state) ? `
       <div class="drawer-actions">
         <button class="btn-primary" data-action="acknowledge">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4l3 3-3 3M16 7H5M5 20l3-3-3-3M2 17h11"/></svg>
@@ -114,21 +115,25 @@ SMIS.Drawer = (function () {
         <button class="btn-secondary ${vm.isMobility ? 'active-mobility' : ''}" data-action="mobility">
           ${vm.isMobility ? 'Resume alerts' : 'Pause alerts · Temporary Mobility'}
         </button>
-      </div>
+      </div>` : `
+      <div style="text-align:center; color:var(--text-tertiary); font-size:12.5px; padding:10px 0;">View only — clinical actions are restricted to nursing staff.</div>`}
     `;
 
     drawerEl.querySelector('.drawer-close').addEventListener('click', close);
     drawerEl.querySelectorAll('[data-range]').forEach((btn) => {
       btn.addEventListener('click', () => { range = btn.dataset.range; render(); });
     });
-    drawerEl.querySelector('[data-action="acknowledge"]').addEventListener('click', () => {
+    const ackBtn = drawerEl.querySelector('[data-action="acknowledge"]');
+    if (ackBtn) ackBtn.addEventListener('click', () => {
       if (vm.openAlert) SMIS.Actions.markAlertRead(vm.openAlert.id);
       if (window.SMIS.Toast) window.SMIS.Toast.push({ type: 'critical_low', bedId: vm.bed.id, message: 'Acknowledged — heading to bed.' });
     });
-    drawerEl.querySelector('[data-action="resolve"]').addEventListener('click', () => {
+    const resolveBtn = drawerEl.querySelector('[data-action="resolve"]');
+    if (resolveBtn) resolveBtn.addEventListener('click', () => {
       SMIS.Actions.resolveBed(vm.bed.id);
     });
-    drawerEl.querySelector('[data-action="mobility"]').addEventListener('click', () => {
+    const mobilityBtn = drawerEl.querySelector('[data-action="mobility"]');
+    if (mobilityBtn) mobilityBtn.addEventListener('click', () => {
       SMIS.Actions.toggleMobility(vm.bed.id);
     });
   }

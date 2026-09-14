@@ -12,7 +12,7 @@
 
   function render() {
     const state = SMIS.Store.get();
-    const occupiedBeds = state.beds.filter((b) => b.status === 'occupied');
+    const occupiedBeds = SMIS.Permissions.scopedBeds(state).filter((b) => b.status === 'occupied');
     SMIS.Shell.render({ page: 'patients', breadcrumb: 'PATIENTS', title: 'Patients', meta: `${occupiedBeds.length} patients admitted` });
 
     const rows = occupiedBeds.map((bed, i) => {

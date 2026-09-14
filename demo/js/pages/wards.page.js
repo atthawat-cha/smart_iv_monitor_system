@@ -1,12 +1,14 @@
 (function () {
   function render() {
     const state = SMIS.Store.get();
-    SMIS.Shell.render({ page: 'wards', breadcrumb: 'WARDS', title: 'Wards', meta: `${state.wards.length} wards · ${state.beds.length} beds total` });
+    const wards = SMIS.Permissions.scopedWards(state);
+    const beds = SMIS.Permissions.scopedBeds(state);
+    SMIS.Shell.render({ page: 'wards', breadcrumb: 'WARDS', title: 'Wards', meta: `${wards.length} ward${wards.length === 1 ? '' : 's'} · ${beds.length} beds total` });
 
     const body = document.getElementById('page-body');
-    const cards = state.wards.map((ward) => {
-      const beds = state.beds.filter((b) => b.wardId === ward.id);
-      const vms = beds.map((b) => SMIS.BedCard.viewModel(state, b.id));
+    const cards = wards.map((ward) => {
+      const wardBeds = beds.filter((b) => b.wardId === ward.id);
+      const vms = wardBeds.map((b) => SMIS.BedCard.viewModel(state, b.id));
       const counts = { critical: 0, warning: 0, normal: 0, offline: 0, vacant: 0 };
       vms.forEach((vm) => {
         if (vm.vacant) counts.vacant++;
@@ -23,7 +25,7 @@
                 <div class="ward-card-title">${ward.name}</div>
                 <div class="ward-card-meta">${ward.building} · Floor ${ward.floor}</div>
               </div>
-              <div class="ward-card-meta">${beds.length} beds</div>
+              <div class="ward-card-meta">${wardBeds.length} beds</div>
             </div>
             <div class="ward-counts">
               <div class="ward-count c-critical">Critical<b>${counts.critical}</b></div>

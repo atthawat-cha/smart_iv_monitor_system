@@ -4,9 +4,10 @@
 
   function render() {
     const state = SMIS.Store.get();
-    SMIS.Shell.render({ page: 'devices', breadcrumb: 'DEVICES', title: 'Devices', meta: `${state.devices.length} IoT nodes provisioned` });
+    const devices = SMIS.Permissions.scopedDevices(state);
+    SMIS.Shell.render({ page: 'devices', breadcrumb: 'DEVICES', title: 'Devices', meta: `${devices.length} IoT node${devices.length === 1 ? '' : 's'} provisioned` });
 
-    const rows = state.devices.map((device) => {
+    const rows = devices.map((device) => {
       const bed = state.beds.find((b) => b.deviceId === device.id);
       const battBand = SMIS.Formulas.batteryBand(device.battery);
       const unassigned = device.status === 'unassigned';

@@ -2,9 +2,8 @@
   const RANGE_MS = { '30m': 30 * 60000, '1h': 60 * 60000, '24h': 24 * 60 * 60000 };
   let range = '1h';
 
-  function computeKpis(state) {
+  function computeKpis(state, beds) {
     const F = SMIS.Formulas;
-    const beds = state.beds;
     let critical = 0, warning = 0, connected = 0, flowSum = 0, flowCount = 0, minEte = null, minEteBed = null;
     beds.forEach((bed) => {
       const ivs = state.ivStatus[bed.id];
@@ -26,10 +25,10 @@
     };
   }
 
-  function wardDistribution(state) {
+  function wardDistribution(state, beds) {
     const F = SMIS.Formulas;
     const counts = { green: 0, yellow: 0, orange: 0, red: 0, gray: 0 };
-    state.beds.forEach((bed) => {
+    beds.forEach((bed) => {
       const ivs = state.ivStatus[bed.id];
       const device = state.devices.find((d) => d.id === bed.deviceId);
       if (!ivs || !device) return;
@@ -46,7 +45,7 @@
     return null;
   }
 
-  function consumptionTrend(state) {
+  function consumptionTrend(state, beds) {
     const windowMs = RANGE_MS[range];
     const BUCKETS = 24;
     const now = state.meta.simClockMs;
@@ -55,7 +54,7 @@
     for (let i = 0; i < BUCKETS; i++) {
       const bucketEnd = now - windowMs + (i + 1) * bucketMs;
       let sum = 0, count = 0;
-      state.beds.forEach((bed) => {
+      beds.forEach((bed) => {
         const r = findReadingAtOrBefore(state.readings[bed.id] || [], bucketEnd);
         if (r) { sum += (r.remainingMl / bed.initialMl) * 100; count++; }
       });
@@ -64,8 +63,8 @@
     return points;
   }
 
-  function recentAlerts(state, n) {
-    return state.alerts.slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, n);
+  function recentAlerts(alerts, n) {
+    return alerts.slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, n);
   }
 
   const ALERT_ICON_COLOR = { critical_low: '#ff8a97', empty: '#ff8a97', device_offline: '#cbd5e1', occlusion_suspected: '#ffdd8a' };
@@ -85,10 +84,18 @@
 
   function render() {
     const state = SMIS.Store.get();
-    SMIS.Shell.render({ page: 'dashboard', breadcrumb: 'OVERVIEW', title: 'Dashboard', meta: `Welcome back, ${state.session.name || 'Guest'}` });
-    const kpi = computeKpis(state);
-    const dist = wardDistribution(state);
-    const alerts = recentAlerts(state, 8);
+    const wards = SMIS.Permissions.scopedWards(state);
+    const beds = SMIS.Permissions.scopedBeds(state);
+    const alerts = SMIS.Permissions.scopedAlerts(state);
+    const scopedWardName = wards.length === 1 ? wards[0].name : null;
+
+    SMIS.Shell.render({
+      page: 'dashboard', breadcrumb: 'OVERVIEW', title: 'Dashboard',
+      meta: `Welcome back, ${state.session.name || 'Guest'}${scopedWardName ? ` · ${scopedWardName}` : ''}`,
+    });
+    const kpi = computeKpis(state, beds);
+    const dist = wardDistribution(state, beds);
+    const recent = recentAlerts(alerts, 8);
 
     const body = document.getElementById('page-body');
     body.innerHTML = `
@@ -96,7 +103,7 @@
         <div class="kpi-card">
           <div class="kpi-card-head"><div class="kpi-label">ACTIVE BEDS</div></div>
           <div class="kpi-value">${kpi.activeBeds}</div>
-          <div class="kpi-caption">Across ${state.wards.length} wards</div>
+          <div class="kpi-caption">${scopedWardName ? scopedWardName : `Across ${wards.length} wards`}</div>
         </div>
         <div class="kpi-card tint-critical">
           <div class="kpi-card-head"><div class="kpi-label">CRITICAL IV &lt;20%</div></div>
@@ -110,7 +117,7 @@
         </div>
         <div class="kpi-card tint-normal">
           <div class="kpi-card-head"><div class="kpi-label">CONNECTED DEVICES</div></div>
-          <div class="kpi-value">${kpi.connectedDevices}/${state.beds.filter((b) => b.deviceId).length}</div>
+          <div class="kpi-value">${kpi.connectedDevices}/${beds.filter((b) => b.deviceId).length}</div>
           <div class="kpi-caption">Live telemetry</div>
         </div>
       </div>
@@ -123,7 +130,7 @@
               ${['30m', '1h', '24h'].map((r) => `<button class="pill ${r === range ? 'active' : ''}" data-trend-range="${r}">${r}</button>`).join('')}
             </div>
           </div>
-          <div class="chart-box" style="margin-top:12px;">${SMIS.Charts.sparkline(consumptionTrend(state), { color: '#7c6cff', width: 480, height: 140 })}</div>
+          <div class="chart-box" style="margin-top:12px;">${SMIS.Charts.sparkline(consumptionTrend(state, beds), { color: '#7c6cff', width: 480, height: 140 })}</div>
           <div class="chart-axis-labels"><span>Avg remaining % across all beds</span></div>
         </div>
         <div class="card-panel" style="padding:18px; display:flex; flex-direction:column; align-items:center; gap:14px;">
@@ -159,7 +166,7 @@
 
       <div class="card-panel" style="padding:18px;">
         <div class="section-title" style="margin-bottom:6px;">Alert Timeline</div>
-        ${alerts.length ? alerts.map(renderAlertRow).join('') : '<div class="chart-empty">No alerts yet.</div>'}
+        ${recent.length ? recent.map(renderAlertRow).join('') : '<div class="chart-empty">No alerts yet.</div>'}
       </div>
     `;
 

@@ -347,13 +347,13 @@ SMIS.Actions = (function () {
     const state = SMIS.Store.get();
     const user = state.users.find((u) => u.id === userId);
     if (!user) return;
-    state.session = { userId: user.id, role: user.role, name: user.name };
+    state.session = { userId: user.id, role: user.role, name: user.name, wardId: user.wardId || null };
     SMIS.Store.save();
   }
 
   function logout() {
     const state = SMIS.Store.get();
-    state.session = { userId: null, role: null, name: null };
+    state.session = { userId: null, role: null, name: null, wardId: null };
     SMIS.Store.save();
   }
 

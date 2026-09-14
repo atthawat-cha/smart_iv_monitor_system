@@ -17,12 +17,14 @@ SMIS.BedCard = (function () {
     return `conic-gradient(${color} ${percent}%, rgba(255,255,255,0.10) 0)`;
   }
 
-  function viewModel(state, bedId) {
+  function viewModel(state, bedId, opts) {
+    const maskPatient = !!(opts && opts.maskPatient);
     const bed = state.beds.find((b) => b.id === bedId);
     if (!bed) return null;
     const ward = state.wards.find((w) => w.id === bed.wardId);
+    const displayHn = maskPatient ? 'Patient' : bed.patientHn;
     if (bed.status === 'vacant') {
-      return { bed, ward, vacant: true, badgeText: 'VACANT', badgeColors: { bg: 'rgba(157,140,255,0.12)', color: '#9d8cff' } };
+      return { bed, ward, displayHn, vacant: true, badgeText: 'VACANT', badgeColors: { bg: 'rgba(157,140,255,0.12)', color: '#9d8cff' } };
     }
     const device = state.devices.find((d) => d.id === bed.deviceId);
     const ivs = state.ivStatus[bedId] || {};
@@ -59,7 +61,7 @@ SMIS.BedCard = (function () {
     const fluidType = state.fluidTypes.find((f) => f.id === bed.fluidTypeId);
 
     return {
-      bed, device, ward, ivs,
+      bed, device, ward, ivs, displayHn,
       remainingPercent, flowRate, ete,
       offline, isEmpty, isOcclusion, band, badgeText, badgeColors, colorBand, ringStyle, urgent,
       isMobility: !!ivs.isMobilityMode,
@@ -95,7 +97,7 @@ SMIS.BedCard = (function () {
       <div class="bed-card-head">
         <div>
           <div class="bed-no">${vm.bed.id}</div>
-          <div class="bed-hn">${vm.bed.patientHn}</div>
+          <div class="bed-hn">${vm.displayHn}</div>
         </div>
         <div class="badge-pill" style="background:${vm.badgeColors.bg}; color:${vm.badgeColors.color};">${vm.badgeText}</div>
       </div>
@@ -123,7 +125,7 @@ SMIS.BedCard = (function () {
     }
     vms.forEach((vm) => {
       const card = renderCard(vm);
-      if (vm.vacant) { card.style.cursor = 'default'; } else { card.addEventListener('click', () => onOpen(vm.bed.id)); }
+      if (vm.vacant || !onOpen) { card.style.cursor = 'default'; } else { card.addEventListener('click', () => onOpen(vm.bed.id)); }
       container.appendChild(card);
     });
   }

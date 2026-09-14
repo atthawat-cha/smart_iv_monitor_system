@@ -5,7 +5,7 @@ window.SMIS = window.SMIS || {};
 
 SMIS.Store = (function () {
   const KEY = 'smis_demo_state_v1';
-  const SCHEMA_VERSION = 2; // bump whenever seed.js's state shape changes, to force a clean reseed
+  const SCHEMA_VERSION = 3; // bump whenever seed.js's state shape changes, to force a clean reseed
   let state = null;
   let listeners = [];
 

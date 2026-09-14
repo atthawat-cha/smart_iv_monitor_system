@@ -50,6 +50,11 @@
     const state = SMIS.Store.get();
     SMIS.Shell.render({ page: 'analytics', breadcrumb: 'ANALYTICS', title: 'Analytics', meta: 'Ward performance & staffing evidence' });
 
+    if (!SMIS.Permissions.canViewAnalytics(state)) {
+      document.getElementById('page-body').innerHTML = `<div class="not-authorized">This page is only available to head nurse, admin, and superadmin accounts.<br>You're signed in as <b>${state.session.role.replace('_', ' ')}</b>.</div>`;
+      return;
+    }
+
     const top = topCriticalBeds(state, 5);
     const stats = dailyStats(state);
     const reliability = deviceReliability(state);

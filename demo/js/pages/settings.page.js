@@ -47,8 +47,8 @@
     const state = SMIS.Store.get();
     SMIS.Shell.render({ page: 'settings', breadcrumb: 'SETTINGS', title: 'Settings', meta: 'Alert thresholds · wards, beds, devices, fluids & users' });
 
-    if (state.session.role !== 'system_admin') {
-      document.getElementById('page-body').innerHTML = `<div class="not-authorized">This page is only available to system_admin accounts.<br>You're signed in as <b>${state.session.role}</b>.</div>`;
+    if (!SMIS.Permissions.canManageSystem(state)) {
+      document.getElementById('page-body').innerHTML = `<div class="not-authorized">This page is only available to superadmin accounts.<br>You're signed in as <b>${state.session.role.replace('_', ' ')}</b>.</div>`;
       return;
     }
 
@@ -156,8 +156,9 @@
           <select name="role" class="field">
             <option value="nurse">Nurse</option>
             <option value="head_nurse">Head Nurse</option>
-            <option value="hospital_admin">Hospital Admin</option>
-            <option value="system_admin">System Admin</option>
+            <option value="admin">Admin</option>
+            <option value="superadmin">Superadmin</option>
+            <option value="guest">Guest / Public</option>
           </select>
           <button class="btn accent" type="submit">Add user</button>
         </form>

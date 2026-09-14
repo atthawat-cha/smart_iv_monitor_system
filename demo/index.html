@@ -10,7 +10,8 @@
   <script src="js/core/store.js"></script>
   <script>
     const state = SMIS.Store.load();
-    window.location.replace(state.session && state.session.role ? 'dashboard.html' : 'login.html');
+    const role = state.session && state.session.role;
+    window.location.replace(!role ? 'login.html' : (role === 'guest' ? 'tv.html' : 'dashboard.html'));
   </script>
 </body>
 </html>

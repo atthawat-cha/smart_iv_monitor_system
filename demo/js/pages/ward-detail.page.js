@@ -63,9 +63,23 @@
 
   function render() {
     const state = SMIS.Store.get();
+    const scopedWards = SMIS.Permissions.scopedWards(state);
     const params = new URLSearchParams(window.location.search);
-    wardId = params.get('ward') || (state.wards[0] && state.wards[0].id);
-    const ward = state.wards.find((w) => w.id === wardId) || state.wards[0];
+    const requestedWardId = params.get('ward');
+
+    if (requestedWardId && !scopedWards.some((w) => w.id === requestedWardId)) {
+      SMIS.Shell.render({ page: 'ward-detail', breadcrumb: 'WARDS', title: 'Ward Detail', meta: '' });
+      document.getElementById('page-body').innerHTML = `<div class="not-authorized">Ward <b>${requestedWardId}</b> is outside your assignment.<br><a href="ward-detail.html">Go to your ward</a></div>`;
+      return;
+    }
+
+    wardId = requestedWardId || (scopedWards[0] && scopedWards[0].id);
+    const ward = scopedWards.find((w) => w.id === wardId) || scopedWards[0];
+    if (!ward) {
+      SMIS.Shell.render({ page: 'ward-detail', breadcrumb: 'WARDS', title: 'Ward Detail', meta: '' });
+      document.getElementById('page-body').innerHTML = `<div class="not-authorized">No ward is assigned to your account.</div>`;
+      return;
+    }
     wardId = ward.id;
 
     SMIS.Shell.render({ page: 'ward-detail', breadcrumb: 'WARDS / ' + ward.name.toUpperCase(), title: ward.name, meta: `${ward.building} · Floor ${ward.floor} · ${state.beds.filter((b) => b.wardId === ward.id).length} beds`, presentHref: `tv.html?ward=${ward.id}` });

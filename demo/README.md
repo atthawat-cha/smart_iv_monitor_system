@@ -6,11 +6,23 @@ Demo แบบคลิกได้จริงของระบบ Smart IV Mo
 
 เปิดไฟล์ `login.html` ด้วยเบราว์เซอร์ได้เลย (รองรับ `file://` ไม่ต้องรันเซิร์ฟเวอร์)
 
-1. เลือก role (nurse / head_nurse / hospital_admin / system_admin) แล้วกด **Sign in**
+1. เลือก role (nurse / head_nurse / admin / superadmin / guest) แล้วกด **Sign in**
 2. ระบบจะ seed ข้อมูลจำลอง (3 wards, 26 เตียง) และเริ่มจำลอง telemetry แบบ real-time เอง (tick ทุก 1 วินาที)
 3. คลิกไปตามเมนู sidebar เพื่อดูแต่ละหน้าจอ — สถานะทั้งหมดถูกเก็บใน `localStorage` ของเบราว์เซอร์ ดังนั้นสลับหน้าไปมาข้อมูลจะต่อเนื่องกันเหมือนมี backend จริง
 
 > อยากเริ่มใหม่ให้สะอาด กด **Reset demo** ที่ panel มุมขวาล่าง (Demo Control Panel)
+
+## สิทธิ์ตาม Role (`js/core/permissions.js`)
+
+| Role | ขอบเขตที่เห็น | ทำ action คลินิกได้ไหม (Acknowledge/Resolve/Mobility/Alert) | Analytics | Settings |
+|---|---|---|---|---|
+| `nurse` | เฉพาะ ward ที่ตัวเองสังกัด (seed ผูก Nurse Suphada ไว้กับ Ward 10A) — เข้า ward อื่นทาง URL ตรงๆ จะเจอหน้า not-authorized | ✅ (เฉพาะ ward ตัวเอง) | ❌ ซ่อนเมนู | ❌ |
+| `head_nurse` | ทุก ward | ✅ ทุก ward | ✅ | ❌ |
+| `admin` | ทุก ward | ❌ ดูอย่างเดียว (read-only) | ✅ | ❌ |
+| `superadmin` | ทุก ward | ❌ ดูอย่างเดียว (read-only, ไม่ใช่งานคลินิก) | ✅ | ✅ เต็มสิทธิ์ |
+| `guest` | Login แล้วเด้งเข้า `tv.html` (Presentation board) ทันที — เข้าเพจอื่นในระบบไม่ได้เลย | ❌ | ❌ | ❌ |
+
+Guest/public board ปิดบัง HN ผู้ป่วย (ขึ้น "Patient" แทน) และปิดการคลิกเตียงเพื่อเปิด drawer รายละเอียด — เหมาะสำหรับจอสาธารณะ (ล็อบบี้/ทางเดิน) ที่ไม่ควรเห็นข้อมูลระบุตัวผู้ป่วย
 
 ## หน้าจอที่มีให้ (11 หน้า + Presentation mode)
 
@@ -25,10 +37,10 @@ Demo แบบคลิกได้จริงของระบบ Smart IV Mo
 | `devices.html` | Devices | Battery, RSSI, Last seen, Status (รวม Unassigned), Firmware ของแต่ละ IoT device |
 | `alerts.html` | Alert Center | รายการ alert ทั้งหมด, filter All/Unread/Open/Resolved, mark read/resolve |
 | `analytics.html` | Analytics | Top Critical Beds, Avg Consumption/Ward, Device Reliability, Daily Stats, Nurse Workload |
-| `settings.html` | Settings (เฉพาะ `system_admin`) | ดูหัวข้อ **การจัดการฝั่ง Admin** ด้านล่าง |
-| `tv.html` | **Presentation / TV Board** | ดูหัวข้อ **โหมด Presentation** ด้านล่าง |
+| `settings.html` | Settings (เฉพาะ `superadmin`) | ดูหัวข้อ **การจัดการฝั่ง Admin** ด้านล่าง |
+| `tv.html` | **Presentation / TV Board** | ดูหัวข้อ **โหมด Presentation** ด้านล่าง — ปลายทางเดียวของ role `guest` |
 
-## การจัดการฝั่ง Admin (`settings.html`, เฉพาะ role `system_admin`)
+## การจัดการฝั่ง Admin (`settings.html`, เฉพาะ role `superadmin`)
 
 - **Alert Threshold Tuning** — สไลด์เดอร์ปรับ critical-low %, offline warning/alert วินาที, occlusion window แบบ live (มีผลกับ engine จริงทันที)
 - **Wards** — เพิ่ม/ลบ ward (ลบไม่ได้ถ้ายังมีเตียงอยู่ในนั้น)
@@ -75,7 +87,7 @@ demo/
 ├── css/                   tokens (สี/ฟอนต์), shell (sidebar/topbar), components, charts, tv (Presentation mode)
 └── js/
     ├── data/              seed.js (ข้อมูลเริ่มต้น + fluid type catalog), scenarios.js (ฟังก์ชัน tick จำลองอุปกรณ์ 5 แบบ)
-    ├── core/               formulas.js, store.js (localStorage), engine.js (tick loop + Actions: CRUD ward/bed/device/fluid/user), alerts.js
+    ├── core/               formulas.js, store.js (localStorage), engine.js (tick loop + Actions: CRUD ward/bed/device/fluid/user), alerts.js, permissions.js (role → ward scope / action rules)
     ├── ui/                 shell, bedcard (รองรับเตียง vacant), drawer, charts (SVG มือเขียน ไม่ใช้ library), toast, format
     ├── pages/              โค้ดเฉพาะแต่ละหน้า (*.page.js) รวม tv.page.js
     └── devtools/           control-panel.js — สปีดอัพ/บังคับ scenario/reset สำหรับ demo (ไม่แสดงใน tv.html)

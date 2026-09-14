@@ -19,8 +19,8 @@ SMIS.Shell = (function () {
     { key: 'patients', label: 'Patients', href: 'patients.html', icon: 'patients' },
     { key: 'devices', label: 'Devices', href: 'devices.html', icon: 'devices' },
     { key: 'alerts', label: 'Alerts', href: 'alerts.html', icon: 'alerts', badge: true },
-    { key: 'analytics', label: 'Analytics', href: 'analytics.html', icon: 'analytics' },
-    { key: 'settings', label: 'Settings', href: 'settings.html', icon: 'settings', roles: ['system_admin'] },
+    { key: 'analytics', label: 'Analytics', href: 'analytics.html', icon: 'analytics', roles: ['head_nurse', 'admin', 'superadmin'] },
+    { key: 'settings', label: 'Settings', href: 'settings.html', icon: 'settings', roles: ['superadmin'] },
   ];
 
   // sub-pages that highlight a top-level nav item without matching it exactly
@@ -39,7 +39,7 @@ SMIS.Shell = (function () {
     const role = state.session.role || 'nurse';
     const name = state.session.name || 'Guest';
     const activeKey = NAV_ALIAS[pageConfig.page] || pageConfig.page;
-    const alertBadge = SMIS.Alerts.unreadOpenCount(state);
+    const alertBadge = SMIS.Alerts.unreadOpenCount(state, SMIS.Permissions.scopedAlerts(state));
 
     const mount = document.getElementById('app-shell');
     if (!mount) return;
@@ -98,9 +98,12 @@ SMIS.Shell = (function () {
     `;
   }
 
+  // Guest/public sessions never reach the normal app shell — they're kiosk-only (tv.html).
+  // Bookmarking or typing a shell URL directly bounces them straight back to the board.
   function requireLogin() {
     const state = SMIS.Store.get();
     if (!state.session.role) { window.location.href = 'login.html'; return false; }
+    if (state.session.role === 'guest') { window.location.href = 'tv.html'; return false; }
     return true;
   }
 

@@ -169,15 +169,16 @@ SMIS.Seed = (function () {
     });
 
     const users = [
-      { id: 'u1', name: 'Nurse Suphada', username: 'suphada', role: 'nurse', isActive: true },
-      { id: 'u2', name: 'Head Nurse Ananya', username: 'ananya', role: 'head_nurse', isActive: true },
-      { id: 'u3', name: 'Admin Somchai', username: 'somchai', role: 'hospital_admin', isActive: true },
-      { id: 'u4', name: 'System Admin Kritsada', username: 'kritsada', role: 'system_admin', isActive: true },
+      { id: 'u1', name: 'Nurse Suphada', username: 'suphada', role: 'nurse', wardId: '10A', isActive: true },
+      { id: 'u2', name: 'Head Nurse Ananya', username: 'ananya', role: 'head_nurse', wardId: null, isActive: true },
+      { id: 'u3', name: 'Admin Somchai', username: 'somchai', role: 'admin', wardId: null, isActive: true },
+      { id: 'u4', name: 'Superadmin Kritsada', username: 'kritsada', role: 'superadmin', wardId: null, isActive: true },
+      { id: 'u5', name: 'Public Display', username: 'guest', role: 'guest', wardId: null, isActive: true },
     ];
 
     return {
       meta: { simSpeedMultiplier: 1, simClockMs: now, lastRealCheckpoint: now, demoSeededAt: now },
-      session: { userId: null, role: null, name: null },
+      session: { userId: null, role: null, name: null, wardId: null },
       wards, beds, devices, ivStatus, readings, alerts, users,
       fluidTypes: FLUID_TYPES.map((f) => ({ ...f })),
       ivChangeLog: [],

@@ -85,8 +85,8 @@ SMIS.Alerts = (function () {
     });
   }
 
-  function unreadOpenCount(state) {
-    return state.alerts.filter((a) => !a.resolvedAt && !a.isRead).length;
+  function unreadOpenCount(state, alertList) {
+    return (alertList || state.alerts).filter((a) => !a.resolvedAt && !a.isRead).length;
   }
 
   return { evaluateAll, fire, openAlertOf, markRead, resolve, resolveBed, unreadOpenCount };
